@@ -177,6 +177,7 @@ module.exports = function(webpackEnv) {
       // changing JS code would still trigger a refresh.
     ].filter(Boolean),
     output: {
+      globalObject: 'this',
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
@@ -340,7 +341,10 @@ module.exports = function(webpackEnv) {
       rules: [
         // Disable require.ensure as it's not a standard language feature.
         { parser: { requireEnsure: false } },
-
+        {
+          test: /\.worker\.js$/,
+          use: { loader: 'worker-loader' }
+        },
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
         {
